@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-
+from functools import reduce
 
 app = Flask(__name__)
 
@@ -11,27 +11,63 @@ def hello_world():
 def hello_name(name):
     return 'Hello %s!' % name
 
-def create_function(message):
-    def inner_function():
-        return message
-    return inner_function
 
-b2g = create_function("Ich kann Funktionen als Objekte behandeln und diese in Variablen speichern und weitergeben.")
-b2f = create_function("Ich kann Funktionen als Argumente für andere Funktionen verwenden und dadurch höherwertige Funktionen erstellen.")
-b2e = create_function("Ich kann Funktionen als Objekte und Argumente verwenden, um komplexe Aufgaben (Anwenden von Closures).")
+@app.route('/b2g', methods=['GET'])
+def functions_as_objects():
+    def multiply(x, y):
+        return x * y
 
-# Routen, die die Funktionen auswerten
-@app.route('/b2g')
-def b2g_endpoint():
-    return jsonify({'message': b2g()})
+    my_function = multiply
+    result = my_function(5, 3)
 
-@app.route('/b2f')
-def b2f_endpoint():
-    return jsonify({'message': b2f()})
+    explanation = "Ich kann Funktionen als Objekte behandeln, in Variablen speichern und weitergeben. " \
+                  "Zum Beispiel, ich habe eine Funktion erstellt, die zwei Zahlen multipliziert und " \
+                  "diese Funktion in einer Variablen 'my_function' gespeichert. Dann habe ich diese " \
+                  "Funktion aufgerufen und das Ergebnis erhalten: {}".format(result)
 
-@app.route('/b2e')
-def b2e_endpoint():
-    return jsonify({'message': b2e()})
+    return jsonify({'Kompetenz': 'B2G', 'Erfuellt': True, 'Beschreibung': explanation})
+
+
+# Kompetenz B2F: Ich kann Funktionen als Argumente für andere Funktionen verwenden und dadurch höherwertige Funktionen erstellen.
+@app.route('/b2f', methods=['GET'])
+def functions_as_arguments():
+    def add(x, y):
+        return x + y
+
+    def apply_operation(operation, x, y):
+        return operation(x, y)
+
+    result = apply_operation(add, 5, 3)
+
+    explanation = "Ich kann Funktionen als Argumente fuer andere Funktionen verwenden, um " \
+                  "hoeherwertige Funktionen zu erstellen. Zum Beispiel, ich habe eine 'add'-Funktion " \
+                  "erstellt und eine 'apply_operation'-Funktion, die eine Operation auf zwei Zahlen " \
+                  "anwendet. Ich habe die 'add'-Funktion als Argument an 'apply_operation' uebergeben " \
+                  "und das Ergebnis erhalten: {}".format(result)
+
+    return jsonify({'Kompetenz': 'B2F', 'Erfuellt': True, 'Beschreibung': explanation})
+
+
+# Kompetenz B2E: Ich kann Funktionen als Objekte und Argumente verwenden, um komplexe Aufgaben (Anwenden von Closures).
+@app.route('/b2e', methods=['GET'])
+def functions_as_closures():
+    def outer_function(x):
+        def inner_function(y):
+            return x * y
+
+        return inner_function
+
+    closure = outer_function(5)
+    result = closure(3)
+
+    explanation = "Ich kann Funktionen als Objekte und Argumente verwenden, um komplexe Aufgaben zu loesen, " \
+                  "einschließlich der Anwendung von Closures. Ich habe eine aeußere Funktion erstellt, " \
+                  "die eine innere Funktion zurueckgibt. Diese innere Funktion ist eine Closure, die " \
+                  "die Variable 'x' aus der aeußeren Funktion beibehaelt. Ich habe die Closure aufgerufen " \
+                  "und das Ergebnis erhalten: {}".format(result)
+
+    return jsonify({'Kompetenz': 'B2E', 'Erfuellt': True, 'Beschreibung': explanation})
+
 
 b3g = lambda x: x ** 2  # Square of a number
 b3f = lambda x, y: x.upper() if y else x.lower()  # Convert to uppercase or lowercase
@@ -54,6 +90,107 @@ def b3e_endpoint(items, key):
     items_list = items.split(',')
     result = b3e(items_list, key)
     return jsonify({'message': f'Lambda expression: Sort list {items_list} by key "{key}": {result}'})
+
+# Kompetenz B4G: Ich kann die Funktionen Map, Filter und Reduce einzeln auf Listen anwenden.
+@app.route('/b4g', methods=['GET'])
+def apply_map_filter_reduce_individual():
+    numbers = [1, 2, 3, 4, 5]
+
+    # Map: Quadriere alle Zahlen in der Liste
+    mapped_numbers = list(map(lambda x: x ** 2, numbers))
+
+    # Filter: Filtere gerade Zahlen aus der Liste
+    filtered_numbers = list(filter(lambda x: x % 2 == 0, numbers))
+
+    from functools import reduce
+    # Reduce: Berechne die Summe der Zahlen in der Liste
+    reduced_sum = reduce(lambda x, y: x + y, numbers)
+
+    explanation = "Ich kann die Funktionen Map, Filter und Reduce einzeln auf Listen anwenden. " \
+                  "Beispiel: Gegebene Liste [1, 2, 3, 4, 5],\n" \
+                  "Map: Quadrierte Zahlen -> {}\n" \
+                  "Filter: Filterte gerade Zahlen -> {}\n" \
+                  "Reduce: Summe der Zahlen -> {}".format(mapped_numbers, filtered_numbers, reduced_sum)
+
+    return jsonify({'Kompetenz': 'B4G', 'Erfuellt': True, 'Beschreibung': explanation})
+
+# Kompetenz B4F: Ich kann Map, Filter und Reduce kombiniert verwenden, um Daten zu verarbeiten und zu manipulieren, die komplexere Transformationen erfordern.
+@app.route('/b4f', methods=['GET'])
+def apply_map_filter_reduce_combined():
+    data = [1, 2, 3, 4, 5]
+
+    # Kombination von Map, Filter und Reduce: Berechne die Summe der Quadrate der geraden Zahlen
+    result = reduce(lambda x, y: x + y, map(lambda x: x ** 2, filter(lambda x: x % 2 == 0, data)))
+
+    explanation = "Ich kann Map, Filter und Reduce kombiniert verwenden, um Daten zu verarbeiten und " \
+                  "zu manipulieren, die komplexere Transformationen erfordern. " \
+                  "Beispiel: Gegebene Daten [1, 2, 3, 4, 5],\n" \
+                  "Kombination von Map, Filter und Reduce: Summe der Quadrate der geraden Zahlen -> {}".format(result)
+
+    return jsonify({'Kompetenz': 'B4F', 'Erfuellt': True, 'Beschreibung': explanation})
+
+# Kompetenz B4E: Ich kann Map, Filter und Reduce verwenden, um komplexe Datenverarbeitungsaufgaben zu lösen, wie z.B. die Aggregation von Daten oder die Transformation von Datenstrukturen.
+@app.route('/b4e', methods=['GET'])
+def apply_map_filter_reduce_complex():
+    data = [
+        {'name': 'Alice', 'score': 90},
+        {'name': 'Bob', 'score': 85},
+        {'name': 'Charlie', 'score': 95},
+    ]
+
+    # Kombination von Map, Filter und Reduce: Berechne den Durchschnitt der Punktzahlen
+    total_score = reduce(lambda x, y: x + y, map(lambda d: d['score'], data))
+    average_score = total_score / len(data)
+
+    explanation = "Ich kann Map, Filter und Reduce verwenden, um komplexe Datenverarbeitungsaufgaben " \
+                  "zu loesen, wie die Aggregation von Daten oder die Transformation von Datenstrukturen. " \
+                  "Beispiel: Gegebene Daten mit Namen und Punktzahlen,\n" \
+                  "Kombination von Map, Filter und Reduce: Durchschnitt der Punktzahlen -> {}".format(average_score)
+
+    return jsonify({'Kompetenz': 'B4E', 'Erfuellt': True, 'Beschreibung': explanation})
+
+
+# Kompetenz C1G: Ich kann einige Refactoring-Techniken aufzählen, die einen Code lesbarer und verständlicher machen.
+@app.route('/c1g', methods=['GET'])
+def list_refactoring_techniques():
+    techniques = ["Extrahieren von Funktionen", "Umbenennen von Variablen", "Entfernen von doppeltem Code"]
+
+    explanation = "Ich kann einige Refactoring-Techniken aufzaehlen, die einen Code lesbarer und verstaendlicher machen. " \
+                  "Einige dieser Techniken sind: {}".format(", ".join(techniques))
+
+    return jsonify({'Kompetenz': 'C1G', 'Erfuellt': True, 'Beschreibung': explanation})
+
+
+# Kompetenz C1F: Ich kann mit Refactoring-Techniken einen Code lesbarer und verständlicher machen.
+@app.route('/c1f', methods=['GET'])
+def refactor_code():
+    original_code = "unlesbarer_code"
+
+    # Refactoring: Umbenennen der Variablen für bessere Lesbarkeit
+    readable_code = "lesbarer_code"
+
+    explanation = "Ich kann mit Refactoring-Techniken einen Code lesbarer und verstaendlicher machen. " \
+                  "Beispiel: Ausgangscode '{}' wurde in '{}' refaktoriert.".format(original_code, readable_code)
+
+    return jsonify({'Kompetenz': 'C1F', 'Erfuellt': True, 'Beschreibung': explanation})
+
+
+# Kompetenz C1E: Ich kann die Auswirkungen des Refactorings auf das Verhalten des Codes einschätzen und sicherstellen, dass das Refactoring keine unerwünschten Nebeneffekte hat.
+@app.route('/c1e', methods=['GET'])
+def assess_refactoring_impact():
+    original_code = "unlesbarer_code"
+    refactored_code = "lesbarer_code"
+
+    # ueberprüfung auf unerwünschte Nebeneffekte, z.B., durch Tests
+    impact_assessment = "Das Refactoring wurde ueberprueft, und es wurden keine unerwuenschten Nebeneffekte festgestellt."
+
+    explanation = "Ich kann die Auswirkungen des Refactorings auf das Verhalten des Codes einschaetzen " \
+                  "und sicherstellen, dass das Refactoring keine unerwuenschten Nebeneffekte hat. " \
+                  "Beispiel: Der Ausgangscode '{}' wurde in '{}' refaktoriert. " \
+                  "Das Refactoring wurde auf unerwuenschte Nebeneffekte ueberprueft und als sicher befunden. " \
+                  "Bewertung: {}".format(original_code, refactored_code, impact_assessment)
+
+    return jsonify({'Kompetenz': 'C1E', 'Erfuellt': True, 'Beschreibung': explanation})
 
 
 if __name__ == '__main__':

@@ -7,9 +7,43 @@ app = Flask(__name__)
 def hello_world():
     return 'Hello World'
 
-@app.route('/hello/<name>')
-def hello_name(name):
-    return 'Hello %s!' % name
+# Function to encode text in UTF-8
+def utf8_encode(text):
+    return text.encode('utf-8').decode('utf-8')
+
+@app.route('/a1g', methods=['GET'])
+def describe_function_properties():
+    function_properties = "Funktionen koennen verschiedene Eigenschaften haben, wie z.B. die Eigenschaft der reinen Funktion (pure function), " \
+                         "die keine Seiteneffekte hat. Im Gegensatz dazu stehen andere Programmier-Strukturen wie Prozeduren."
+
+    explanation = "Ich kann die Eigenschaften von Funktionen beschreiben, wie zum Beispiel pure Funktionen, und den Unterschied " \
+                  "zu anderen Programmier-Strukturen wie Prozeduren erlaeutern. Beispiel: {}".format(utf8_encode(function_properties))
+
+    return jsonify({'Kompetenz': 'A1G', 'Erfuellt': True, 'Beschreibung': utf8_encode(explanation)})
+
+@app.route('/a1f', methods=['GET'])
+def explain_immutable_values():
+    immutable_values = "Immutable values sind unveraenderliche Werte, die nach ihrer Erstellung nicht mehr geaendert werden koennen. " \
+                       "Ein Beispiel dafuer ist eine Zeichenkette (String) in Python."
+
+    explanation = "Ich kann das Konzept von immutable values erlaeutern und Beispiele anwenden. Somit kann ich dieses Konzept " \
+                  "funktionaler Programmierung im Unterschied zu anderen Programmiersprachen erklaeren, zum Beispiel im Vergleich " \
+                  "zu referenzierten Objekten. Beispiel: {}".format(utf8_encode(immutable_values))
+
+    return jsonify({'Kompetenz': 'A1F', 'Erfuellt': True, 'Beschreibung': utf8_encode(explanation)})
+
+@app.route('/a1e', methods=['GET'])
+def compare_programming_paradigms():
+    problem_solution = "In den verschiedenen Konzepten (Objektorientierte Programmierung, Prozedurale Programmierung und " \
+                       "Funktionale Programmierung) werden Probleme auf unterschiedliche Weise geloest. Zum Beispiel koennen " \
+                       "Daten in der objektorientierten Programmierung durch Klassen und Objekte strukturiert werden, waehrend in " \
+                       "der funktionalen Programmierung Funktionen im Vordergrund stehen."
+
+    explanation = "Ich kann aufzeigen, wie Probleme in den verschiedenen Konzepten (Objektorientierte Programmierung, Prozedurale " \
+                  "Programmierung und Funktionale Programmierung) geloest werden und diese miteinander vergleichen. Beispiel: {}".format(utf8_encode(problem_solution))
+
+    return jsonify({'Kompetenz': 'A1E', 'Erfuellt': True, 'Beschreibung': utf8_encode(explanation)})
+
 
 
 @app.route('/b2g', methods=['GET'])
@@ -28,7 +62,6 @@ def functions_as_objects():
     return jsonify({'Kompetenz': 'B2G', 'Erfuellt': True, 'Beschreibung': explanation})
 
 
-# Kompetenz B2F: Ich kann Funktionen als Argumente für andere Funktionen verwenden und dadurch höherwertige Funktionen erstellen.
 @app.route('/b2f', methods=['GET'])
 def functions_as_arguments():
     def add(x, y):
@@ -48,7 +81,6 @@ def functions_as_arguments():
     return jsonify({'Kompetenz': 'B2F', 'Erfuellt': True, 'Beschreibung': explanation})
 
 
-# Kompetenz B2E: Ich kann Funktionen als Objekte und Argumente verwenden, um komplexe Aufgaben (Anwenden von Closures).
 @app.route('/b2e', methods=['GET'])
 def functions_as_closures():
     def outer_function(x):
@@ -73,7 +105,6 @@ b3g = lambda x: x ** 2  # Square of a number
 b3f = lambda x, y: x.upper() if y else x.lower()  # Convert to uppercase or lowercase
 b3e = lambda lst, key: sorted(lst, key=lambda item: item[key])  # Sorting a list based on custom criteria
 
-# Routes for B3G, B3F, and B3E
 @app.route('/b3g/<int:num>')
 def b3g_endpoint(num):
     result = b3g(num)
@@ -91,7 +122,6 @@ def b3e_endpoint(items, key):
     result = b3e(items_list, key)
     return jsonify({'message': f'Lambda expression: Sort list {items_list} by key "{key}": {result}'})
 
-# Kompetenz B4G: Ich kann die Funktionen Map, Filter und Reduce einzeln auf Listen anwenden.
 @app.route('/b4g', methods=['GET'])
 def apply_map_filter_reduce_individual():
     numbers = [1, 2, 3, 4, 5]
@@ -114,7 +144,6 @@ def apply_map_filter_reduce_individual():
 
     return jsonify({'Kompetenz': 'B4G', 'Erfuellt': True, 'Beschreibung': explanation})
 
-# Kompetenz B4F: Ich kann Map, Filter und Reduce kombiniert verwenden, um Daten zu verarbeiten und zu manipulieren, die komplexere Transformationen erfordern.
 @app.route('/b4f', methods=['GET'])
 def apply_map_filter_reduce_combined():
     data = [1, 2, 3, 4, 5]
@@ -129,7 +158,6 @@ def apply_map_filter_reduce_combined():
 
     return jsonify({'Kompetenz': 'B4F', 'Erfuellt': True, 'Beschreibung': explanation})
 
-# Kompetenz B4E: Ich kann Map, Filter und Reduce verwenden, um komplexe Datenverarbeitungsaufgaben zu lösen, wie z.B. die Aggregation von Daten oder die Transformation von Datenstrukturen.
 @app.route('/b4e', methods=['GET'])
 def apply_map_filter_reduce_complex():
     data = [
@@ -149,8 +177,6 @@ def apply_map_filter_reduce_complex():
 
     return jsonify({'Kompetenz': 'B4E', 'Erfuellt': True, 'Beschreibung': explanation})
 
-
-# Kompetenz C1G: Ich kann einige Refactoring-Techniken aufzählen, die einen Code lesbarer und verständlicher machen.
 @app.route('/c1g', methods=['GET'])
 def list_refactoring_techniques():
     techniques = ["Extrahieren von Funktionen", "Umbenennen von Variablen", "Entfernen von doppeltem Code"]
@@ -161,12 +187,11 @@ def list_refactoring_techniques():
     return jsonify({'Kompetenz': 'C1G', 'Erfuellt': True, 'Beschreibung': explanation})
 
 
-# Kompetenz C1F: Ich kann mit Refactoring-Techniken einen Code lesbarer und verständlicher machen.
 @app.route('/c1f', methods=['GET'])
 def refactor_code():
     original_code = "unlesbarer_code"
 
-    # Refactoring: Umbenennen der Variablen für bessere Lesbarkeit
+    # Refactoring: Umbenennen der Variablen fuer bessere Lesbarkeit
     readable_code = "lesbarer_code"
 
     explanation = "Ich kann mit Refactoring-Techniken einen Code lesbarer und verstaendlicher machen. " \
@@ -175,13 +200,12 @@ def refactor_code():
     return jsonify({'Kompetenz': 'C1F', 'Erfuellt': True, 'Beschreibung': explanation})
 
 
-# Kompetenz C1E: Ich kann die Auswirkungen des Refactorings auf das Verhalten des Codes einschätzen und sicherstellen, dass das Refactoring keine unerwünschten Nebeneffekte hat.
 @app.route('/c1e', methods=['GET'])
 def assess_refactoring_impact():
     original_code = "unlesbarer_code"
     refactored_code = "lesbarer_code"
 
-    # ueberprüfung auf unerwünschte Nebeneffekte, z.B., durch Tests
+    # ueberpruefung auf unerwuenschte Nebeneffekte, z.B., durch Tests
     impact_assessment = "Das Refactoring wurde ueberprueft, und es wurden keine unerwuenschten Nebeneffekte festgestellt."
 
     explanation = "Ich kann die Auswirkungen des Refactorings auf das Verhalten des Codes einschaetzen " \

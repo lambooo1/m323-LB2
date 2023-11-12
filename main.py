@@ -45,6 +45,58 @@ def compare_programming_paradigms():
     return jsonify({'Kompetenz': 'A1E', 'Erfuellt': True, 'Beschreibung': utf8_encode(explanation)})
 
 
+@app.route('/b1g', methods=['GET'])
+def explain_algorithm():
+    explanation = "Ein Algorithmus ist eine präzise, schrittweise Anleitung zur Lösung eines Problems. " \
+                  "Hier ist eine Erklärung eines Algorithmus, der die Bubble-Sort-Methode verwendet."
+
+    algorithm_example = """
+    1. Starte am Anfang der Liste.
+    2. Vergleiche jedes Paar aufeinanderfolgender Elemente.
+    3. Wenn ein Element größer ist als das nächste, tausche sie.
+    4. Fahre fort, die Liste zu durchlaufen, bis keine Tausche mehr erforderlich sind.
+    5. Die Liste ist jetzt sortiert.
+    """
+
+    return jsonify({'Kompetenz': 'B1G', 'Erfüllt': True, 'Erklärung': explanation, 'Beispiel': algorithm_example})
+
+
+@app.route('/b1f', methods=['GET'])
+def decompose_algorithm():
+    def compare_and_swap(elements):
+        for i in range(len(elements) - 1):
+            if elements[i] > elements[i + 1]:
+                elements[i], elements[i + 1] = elements[i + 1], elements[i]
+        return elements
+
+    explanation = "Ich kann Algorithmen in funktionale Teilstücke aufteilen. Hier ist eine aufgeteilte " \
+                  "Funktion für den Bubble-Sort-Algorithmus."
+
+    return jsonify({'Kompetenz': 'B1F', 'Erfüllt': True, 'Erklärung': explanation,
+                    'Funktionsbeispiel': compare_and_swap.__code__.co_code})
+
+
+@app.route('/b1e', methods=['GET'])
+def implement_functions():
+    def bubble_sort(elements):
+        for _ in range(len(elements)):
+            elements = compare_and_swap(elements)
+        return elements
+
+    def compare_and_swap(elements):
+        for i in range(len(elements) - 1):
+            if elements[i] > elements[i + 1]:
+                elements[i], elements[i + 1] = elements[i + 1], elements[i]
+        return elements
+
+    example_list = [4, 2, 7, 1, 9]
+    sorted_list = bubble_sort(example_list)
+
+    explanation = "Ich kann Funktionen in zusammenhängende Algorithmen integrieren. Hier ist ein " \
+                  "Beispiel für die Anwendung des Bubble-Sort-Algorithmus auf eine Liste."
+
+    return jsonify({'Kompetenz': 'B1E', 'Erfüllt': True, 'Erklärung': explanation, 'Sortiertes Beispiel': sorted_list})
+
 
 @app.route('/b2g', methods=['GET'])
 def functions_as_objects():
@@ -179,42 +231,53 @@ def apply_map_filter_reduce_complex():
 
 @app.route('/c1g', methods=['GET'])
 def list_refactoring_techniques():
-    techniques = ["Extrahieren von Funktionen", "Umbenennen von Variablen", "Entfernen von doppeltem Code"]
+    refactoring_techniques = [
+        "Extrahieren von Methoden",
+        "Umbenennen von Variablen und Funktionen",
+        "Aufteilen von großen Funktionen in kleinere",
+        "Entfernen von Redundanzen",
+        "Anwenden von Design Patterns"
+    ]
 
-    explanation = "Ich kann einige Refactoring-Techniken aufzaehlen, die einen Code lesbarer und verstaendlicher machen. " \
-                  "Einige dieser Techniken sind: {}".format(", ".join(techniques))
+    explanation = "Refactoring-Techniken verbessern die Lesbarkeit und Verständlichkeit des Codes. Hier sind einige Beispiele:"
 
-    return jsonify({'Kompetenz': 'C1G', 'Erfuellt': True, 'Beschreibung': explanation})
-
+    return jsonify({'Kompetenz': 'C1G', 'Erfüllt': True, 'Erklärung': explanation, 'Refactoring-Techniken': refactoring_techniques})
 
 @app.route('/c1f', methods=['GET'])
-def refactor_code():
-    original_code = "unlesbarer_code"
+def apply_refactoring_techniques():
+    original_code = """
+    def calculate_area(radius):
+        return 3.14 * radius * radius
+    """
 
-    # Refactoring: Umbenennen der Variablen fuer bessere Lesbarkeit
-    readable_code = "lesbarer_code"
+    refactored_code = """
+    def calculate_circle_area(radius):
+        return math.pi * radius ** 2
+    """
 
-    explanation = "Ich kann mit Refactoring-Techniken einen Code lesbarer und verstaendlicher machen. " \
-                  "Beispiel: Ausgangscode '{}' wurde in '{}' refaktoriert.".format(original_code, readable_code)
+    explanation = "Ich kann mit Refactoring-Techniken einen Code lesbarer und verständlicher machen. " \
+                  "Hier ist ein Beispiel, bei dem eine Funktion zur Berechnung der Fläche eines Kreises refaktoriert wird."
 
-    return jsonify({'Kompetenz': 'C1F', 'Erfuellt': True, 'Beschreibung': explanation})
-
+    return jsonify({'Kompetenz': 'C1F', 'Erfüllt': True, 'Erklärung': explanation,
+                    'Original Code': original_code, 'Refaktorierter Code': refactored_code})
 
 @app.route('/c1e', methods=['GET'])
 def assess_refactoring_impact():
-    original_code = "unlesbarer_code"
-    refactored_code = "lesbarer_code"
+    original_function = """
+    def add_numbers(a, b):
+        return a + b
+    """
 
-    # ueberpruefung auf unerwuenschte Nebeneffekte, z.B., durch Tests
-    impact_assessment = "Das Refactoring wurde ueberprueft, und es wurden keine unerwuenschten Nebeneffekte festgestellt."
+    refactored_function = """
+    def add_numbers(a, b):
+        return a + b + 1
+    """
 
-    explanation = "Ich kann die Auswirkungen des Refactorings auf das Verhalten des Codes einschaetzen " \
-                  "und sicherstellen, dass das Refactoring keine unerwuenschten Nebeneffekte hat. " \
-                  "Beispiel: Der Ausgangscode '{}' wurde in '{}' refaktoriert. " \
-                  "Das Refactoring wurde auf unerwuenschte Nebeneffekte ueberprueft und als sicher befunden. " \
-                  "Bewertung: {}".format(original_code, refactored_code, impact_assessment)
+    impact_assessment = "Die Auswirkungen des Refactorings auf das Verhalten des Codes müssen sorgfältig " \
+                        "beurteilt werden. Hier ist ein Beispiel, bei dem eine unerwünschte Änderung eingeführt wurde."
 
-    return jsonify({'Kompetenz': 'C1E', 'Erfuellt': True, 'Beschreibung': explanation})
+    return jsonify({'Kompetenz': 'C1E', 'Erfüllt': True, 'Auswirkungsbeurteilung': impact_assessment,
+                    'Original Funktion': original_function, 'Refaktorierte Funktion': refactored_function})
 
 
 if __name__ == '__main__':
